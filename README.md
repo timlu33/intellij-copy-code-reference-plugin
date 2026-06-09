@@ -1,44 +1,47 @@
-# Copy Code Reference Plugin for Android Studio
+# Copy Code Reference Plugin for Android Studio & IntelliJ IDEA
 
-這個 Plugin 可以在 Android Studio 中，快速複製選取程式碼的參考路徑，格式包含 Module 名稱與行號。
+[繁體中文](README.zh-TW.md)
 
-格式範例：
+This plugin helps you quickly copy the reference path of the selected code in Android Studio and IntelliJ IDEA, including the module name and line numbers.
+
+Example format:
 `@app/src/main/java/com/example/app/data/repository/BookingRepository.kt#L123-138`
 
-## 功能
+## Features
 
-*   **Floating Toolbar**: 選取程式碼時，浮動工具列會出現一個 📋 複製按鈕。
-*   **Context Menu**: 右鍵選單中，`Copy Reference` 下方新增 `Copy Code Reference` 選項。
-*   **Copy to Terminal**: 右鍵選單中新增 `Copy Reference to Terminal`，可直接將參考路徑貼上並傳送到內建 Terminal。
+*   **Floating Toolbar**: When selecting code in the editor, a 📋 copy button appears in the floating code toolbar.
+*   **Context Menu**: Adds the following options under the editor's right-click context menu (right below `Copy Path/Reference...`):
+    *   `Copy Reference`: Copies the reference path with line numbers to your clipboard.
+    *   `Copy Reference to Terminal`: Copies the reference path, activates the IDE's built-in Terminal, and automatically pastes it into the active terminal tab (prioritizing tabs named `opencode` or `claude`).
 
-## 安裝方式
+## Installation
 
-1.  取得 Plugin 檔案：
-    *   專案編譯後位於：`build/distributions/copy-code-reference-plugin-1.0.0.zip`
-2.  開啟 Android Studio。
-3.  進入 **Settings** (Windows/Linux) 或 **Settings...** (macOS) -> **Plugins**。
-4.  點擊右上角的齒輪圖示 ⚙️，選擇 **Install Plugin from Disk...**。
-5.  選擇上述的 `.zip` 檔案。
-6.  重新啟動 Android Studio。
+1.  **Get the Plugin Package**:
+    *   After building the project, the plugin zip file is located at: `build/distributions/copy-code-reference-plugin-1.0.0.zip`
+2.  Open **Android Studio** or **IntelliJ IDEA**.
+3.  Go to **Settings** (Windows/Linux) or **Preferences / Settings...** (macOS) -> **Plugins**.
+4.  Click the gear icon ⚙️ in the top right and select **Install Plugin from Disk...**.
+5.  Select the zip file generated in step 1.
+6.  Restart the IDE.
 
-## 使用說明
+## Usage
 
-1.  在程式碼編輯器中，圈選一段程式碼。
-2.  點擊浮動工具列上的 📋 圖示，或是右鍵選擇 **Copy Code Reference**。
-3.  路徑與行號即複製到剪貼簿。
+1.  Select a block of code in the editor.
+2.  Click the 📋 icon in the floating toolbar, or right-click and choose **Copy Reference** or **Copy Reference to Terminal**.
+3.  The reference path (and line numbers) is now copied to your clipboard. If you chose the terminal option, it will also be pasted into the active terminal session.
 
-## 開發與編譯
+## Development & Build
 
-### 前置需求
-*   JDK 21 (Gradle 會自動下載 Toolchain，但建議本地安裝)
-*   Gradle 8.13 (內附 Wrapper)
+### Prerequisites
+*   JDK 21 (Gradle Toolchain will automatically download it if needed, but installing it locally is recommended)
+*   Gradle 8.13 (Wrapper included)
 
-### 編譯指令
+### Build Command
 
-在專案根目錄執行：
+Run the following command in the project root:
 
 ```bash
 ./gradlew buildPlugin
 ```
 
-編譯成功後，Plugin 檔案會產生在 `build/distributions/` 目錄下。
+Once built successfully, you can find the plugin package in the `build/distributions/` directory.
