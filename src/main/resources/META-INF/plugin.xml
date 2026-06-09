@@ -1,0 +1,38 @@
+<idea-plugin>
+    <id>com.timlu.copyref</id>
+    <name>Copy Code Reference</name>
+    <vendor>Tim Lu</vendor>
+    <description><![CDATA[
+        Copies selected code reference with file path and line numbers to clipboard and terminal.<br/>
+        Format: @module/path/File.kt#L{start}-{end}
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="Copy Code Reference"
+                           displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <action
+            id="CopyReferenceToClipboard"
+            class="com.timlu.copyref.CopyReferenceToClipboardAction"
+            text="Copy Reference"
+            description="Copy file path with line numbers to clipboard"
+            icon="AllIcons.Actions.Copy">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
+            <add-to-group group-id="Floating.CodeToolbar" anchor="last"/>
+        </action>
+        <action
+            id="CopyReferenceToTerminal"
+            class="com.timlu.copyref.CopyReferenceToTerminalAction"
+            text="Copy Reference to Terminal"
+            description="Copy file path with line numbers to clipboard and send to Terminal"
+            icon="AllIcons.Debugger.Console">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReferenceToClipboard"/>
+            <add-to-group group-id="Floating.CodeToolbar" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
