@@ -26,12 +26,20 @@
             <add-to-group group-id="Floating.CodeToolbar" anchor="last"/>
         </action>
         <action
+            id="CopyReferenceWithEli5"
+            class="com.timlu.copyref.CopyReferenceWithEli5Action"
+            text="Copy Reference with ELI5"
+            description="Copy an ELI5 explanation prompt with the code reference"
+            icon="AllIcons.Actions.Help">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReferenceToClipboard"/>
+        </action>
+        <action
             id="CopyReferenceToTerminal"
             class="com.timlu.copyref.CopyReferenceToTerminalAction"
             text="Copy Reference to Terminal"
             description="Copy file path with line numbers to clipboard and send to Terminal"
             icon="AllIcons.Debugger.Console">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReferenceToClipboard"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReferenceWithEli5"/>
             <add-to-group group-id="Floating.CodeToolbar" anchor="last"/>
         </action>
     </actions>
