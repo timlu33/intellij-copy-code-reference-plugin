@@ -12,6 +12,7 @@ Example format:
 *   **Floating Toolbar**: When selecting code in the editor, a 📋 copy button appears in the floating code toolbar.
 *   **Context Menu**: Adds the following options under the editor's right-click context menu (right below `Copy Path/Reference...`):
     *   `Copy Reference`: Copies the reference path with line numbers to your clipboard.
+    *   `Copy Reference with ELI5`: Copies an ELI5-oriented explanation prompt together with the code reference, ready to paste into an AI assistant for a simple step-by-step explanation.
     *   `Copy Reference to Terminal`: Copies the reference path, activates the IDE's built-in Terminal, and automatically pastes it into the active terminal tab (prioritizing tabs named `opencode` or `claude`).
 
 ## Installation
@@ -27,8 +28,8 @@ Example format:
 ## Usage
 
 1.  Select a block of code in the editor.
-2.  Click the 📋 icon in the floating toolbar, or right-click and choose **Copy Reference** or **Copy Reference to Terminal**.
-3.  The reference path (and line numbers) is now copied to your clipboard. If you chose the terminal option, it will also be pasted into the active terminal session.
+2.  Click the 📋 icon in the floating toolbar, or right-click and choose **Copy Reference**, **Copy Reference with ELI5**, or **Copy Reference to Terminal**.
+3.  The reference path (and line numbers) is copied to your clipboard. If you chose **Copy Reference with ELI5**, the clipboard also contains an AI prompt asking for a simple, step-by-step explanation. If you chose the terminal option, the reference is also pasted into the active terminal session.
 
 ## Development & Build
 
