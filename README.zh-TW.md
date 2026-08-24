@@ -12,6 +12,7 @@
 *   **Floating Toolbar (浮動工具列)**：選取程式碼時，浮動工具列會出現 📋 複製按鈕。
 *   **Context Menu (右鍵選單)**：在編輯器右鍵選單中，`Copy Path/Reference...` 下方新增以下選項：
     *   `Copy Reference`：複製包含行號的程式碼參考路徑至剪貼簿。
+    *   `Copy Reference with ELI5`：複製 ELI5（Explain Like I'm 5）提示詞與程式碼參考路徑，方便直接貼到 AI 助手，取得簡單、逐步的程式碼解說。
     *   `Copy Reference to Terminal`：複製參考路徑，並自動開啟內建 Terminal 貼上（優先尋找名為 `opencode` 或 `claude` 的分頁）。
 
 ## 安裝方式
@@ -27,8 +28,8 @@
 ## 使用說明
 
 1.  在程式碼編輯器中，圈選一段程式碼。
-2.  點擊浮動工具列上的 📋 圖示，或是右鍵選擇 **Copy Reference** / **Copy Reference to Terminal**。
-3.  路徑與行號即複製到剪貼簿（若選擇 Terminal 選項，則會同步貼至 Terminal 中）。
+2.  點擊浮動工具列上的 📋 圖示，或是右鍵選擇 **Copy Reference** / **Copy Reference with ELI5** / **Copy Reference to Terminal**。
+3.  路徑與行號即複製到剪貼簿。若選擇 **Copy Reference with ELI5**，剪貼簿也會包含要求 AI 用簡單方式逐步解釋程式碼的提示詞；若選擇 Terminal 選項，則會同步貼至 Terminal 中。
 
 ## 開發與編譯
 
