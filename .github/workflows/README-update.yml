@@ -1,0 +1,21 @@
+name: Validate README
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+      - 'README.zh-TW.md'
+      - 'src/main/**'
+  workflow_dispatch:
+
+jobs:
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check ELI5 documentation
+        run: |
+          grep -q 'Copy Reference with ELI5' README.md
+          grep -q 'Copy Reference with ELI5' README.zh-TW.md
