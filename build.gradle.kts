@@ -19,6 +19,9 @@ dependencies {
         intellijIdeaCommunity(providers.gradleProperty("platformVersion").get())
         bundledPlugin("org.jetbrains.plugins.terminal")
     }
+    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
+    testImplementation("io.mockk:mockk:1.14.5")
 }
 
 intellijPlatform {
@@ -39,5 +42,8 @@ kotlin {
 tasks {
     wrapper {
         gradleVersion = "8.13"
+    }
+    test {
+        useJUnitPlatform()
     }
 }
