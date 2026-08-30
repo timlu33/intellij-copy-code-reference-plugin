@@ -63,11 +63,9 @@ class CopyReferenceToTerminalAction : AnAction() {
                 val targetWidget = findPreferredWidget(terminalManager, widgets)
                     ?: widgets.first()
 
-                val content = try {
+                val content = runCatching {
                     terminalManager.getContainer(targetWidget)?.content
-                } catch (_: Exception) {
-                    null
-                }
+                }.getOrNull()
                 if (content != null) {
                     toolWindow.contentManager.setSelectedContent(content, true)
                 }
@@ -75,7 +73,7 @@ class CopyReferenceToTerminalAction : AnAction() {
                 writeToWidget(project, targetWidget, text)
             } catch (ex: Exception) {
                 LOG.warn("Failed to paste to terminal", ex)
-                notify(project, "Failed: ${ex.message}", NotificationType.ERROR)
+                notify(project, "Failed: ${ex.message ?: "Unknown error"}", NotificationType.ERROR)
             }
         }, true)
     }
@@ -85,12 +83,11 @@ class CopyReferenceToTerminalAction : AnAction() {
         widgets: Collection<TerminalWidget>
     ): TerminalWidget? {
         for (widget in widgets) {
-            val displayName = try {
+            val displayName = runCatching {
                 manager.getContainer(widget)?.content?.displayName?.lowercase()
-            } catch (_: Exception) {
-                null
-            } ?: continue
-            if (PREFERRED_NAMES.any { displayName.contains(it) }) {
+            }.getOrNull() ?: continue
+
+            if (PREFERRED_NAMES.any(displayName::contains)) {
                 return widget
             }
         }
@@ -98,64 +95,23 @@ class CopyReferenceToTerminalAction : AnAction() {
     }
 
     private fun writeToWidget(project: Project, widget: TerminalWidget, text: String) {
-        // Log available methods for debugging ReworkedTerminalWidget
-        LOG.info("Widget class: ${widget.javaClass.name}")
-        val allMethods = widget.javaClass.methods.map { "${it.name}(${it.parameterTypes.joinToString(", ") { it.simpleName }})" }
-        LOG.info("Available methods: ${allMethods.filter { it.contains("send") || it.contains("type") || it.contains("paste") || it.contains("write") }}")
-
-        val connector = runCatching { widget.ttyConnector }.getOrNull()
-        if (connector != null) {
-            runCatching { connector.write(text) }
-                .onSuccess { return }
-                .onFailure { LOG.warn("ttyConnector.write() failed", it) }
-        }
-
-        // Fallback: reflection typeText
-        val methods = widget.javaClass.methods
-        val typeMethod = methods.firstOrNull {
-            it.name == "typeText" && it.parameterCount == 1
-                    && it.parameterTypes[0] == String::class.java
-        }
-        if (typeMethod != null) {
-            runCatching {
-                typeMethod.isAccessible = true
-                typeMethod.invoke(widget, text)
-            }.onSuccess { return }
-                .onFailure { LOG.warn("typeText() failed", it) }
-        }
-
-        // Fallback: reflection pasteText
-        val pasteMethod = methods.firstOrNull {
-            it.name == "pasteText" && it.parameterCount == 1
-                    && it.parameterTypes[0] == String::class.java
-        }
-        if (pasteMethod != null) {
-            runCatching {
-                pasteMethod.isAccessible = true
-                pasteMethod.invoke(widget, text)
-            }.onSuccess { return }
-                .onFailure { LOG.warn("pasteText() failed", it) }
-        }
-
-        // Fallback: try bracketed paste mode via sendCommandToExecute with escape sequences
+        // The reworked terminal exposes a command-oriented API. Prefer it over
+        // implementation-specific reflection or direct TTY writes so this action
+        // works across supported terminal implementations.
         try {
-            val sendMethod = methods.firstOrNull {
-                it.name == "sendCommandToExecute" && it.parameterCount == 1
-                        && it.parameterTypes[0] == String::class.java
-            }
-            if (sendMethod != null) {
-                sendMethod.isAccessible = true
-                // Use bracketed paste mode escape sequences
-                val pasteText = "\u001B[200~$text\u001B[201~"
-                sendMethod.invoke(widget, pasteText)
-                LOG.info("Used sendCommandToExecute with bracketed paste mode")
-                return
-            }
+            widget.executeCommand(text)
+            return
         } catch (ex: Exception) {
-            LOG.warn("sendCommandToExecute with bracketed paste failed", ex)
+            LOG.warn("executeCommand() failed", ex)
         }
 
-        notify(project, "Cannot write to terminal widget (class: ${widget.javaClass.name})", NotificationType.ERROR)
+        // Keep the copied reference available even when the terminal session is
+        // temporarily unavailable; the clipboard operation has already succeeded.
+        notify(
+            project,
+            "Reference copied, but could not send it to the terminal",
+            NotificationType.WARNING
+        )
     }
 
     private fun notify(project: Project, message: String, type: NotificationType) {
